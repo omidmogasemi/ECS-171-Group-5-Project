@@ -17,6 +17,8 @@ def main():
         ],
     ]
     window = sg.Window("Image Viewer", layout)
+    [sg.popup_no_wait('Welcome!')] 
+    sg.popup_ok('Welcome to Group 5\'s ECS 171 Project!\n To run our demo, you can upload one of the 5 pre-selected images under the images folder, or upload an image of your own! All major file types are supported.\n Upon seeing your image successfully uploaded, you can then press the "Run" button to have your image classified and see basic statistics relative to our classifications!')  # Shows OK button
     while True:
         event, values = window.read()
         if event == "Exit" or event == sg.WIN_CLOSED:
