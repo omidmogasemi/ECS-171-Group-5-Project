@@ -2,4 +2,4 @@
 
 ## Local Setup 
 
-1. conda create --name <env> --file <this file> 
+1. conda create --name <env> --file requirements.txt 
