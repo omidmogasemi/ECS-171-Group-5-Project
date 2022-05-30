@@ -19,7 +19,6 @@ def main():
         [sg.Image(key="IMAGEKEY")], # unique key to reference image 
         [
             sg.Input(size=(30, 1), key="FILEKEY"), # unique key to reference file path 
-            sg.Text("Choose File: "), 
             sg.FileBrowse(file_types=file_types), 
             sg.Button("Load Image"), 
             sg.Button("Run Model"), 
@@ -43,7 +42,7 @@ def main():
                 image.save(bio, format="PNG")
                 window["IMAGEKEY"].update(data=bio.getvalue())
         if event == "Run Model" and curImage != None: # Run model if image is selected 
-            sg.popup_ok("the answer is ", eval(curImage))
+            eval_popup(eval(curImage)) 
     window.close()
 
 def onboarding():
@@ -53,6 +52,24 @@ def onboarding():
     ]
     sg.Window('ECS 171 Group Project', layout, modal=True).read(close=True) 
 
+def eval_popup(res): 
+    labels = ["akiec", "bcc", "bkl", "df", "mel", "nv", "vasc"] 
+    
+    layout = [ 
+        # [sg.Text('Your image has been classified as: ' + str(res.argmax()))], 
+        [sg.Text(f'Classification Prediction: {labels[res.argmax()]}')], 
+        [sg.Text(f'\nClassification Probabilities:')], 
+        [sg.Text(f'akiec: {res[0][0].item():.2f}')],
+        [sg.Text(f'bcc: {res[0][1].item():.2f}')],
+        [sg.Text(f'bkl: {res[0][2].item():.2f}')],
+        [sg.Text(f'df: {res[0][3].item():.2f}')],
+        [sg.Text(f'mel: {res[0][4].item():.2f}')],
+        [sg.Text(f'nv: {res[0][5].item():.2f}')],
+        [sg.Text(f'vasc: {res[0][6].item():.2f}')],
+        [sg.Push(), sg.Button('OK')], 
+    ] 
+    sg.Window('Image Classification', layout, modal=True).read(close=True) 
+
 def eval(image): 
     # Load data transformer and model file using CPU only 
     data_transform = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()]) 
@@ -60,8 +77,7 @@ def eval(image):
     model.eval() 
     image = data_transform(image).unsqueeze(0) # Transform the image 
     out = model(image) # Run the image against the model 
-    print(out.argmax()) 
-    return out.argmax() 
+    return out 
 
 if __name__ == "__main__":
     main()
