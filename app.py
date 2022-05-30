@@ -58,14 +58,6 @@ def eval_popup(res):
     layout = [ 
         # [sg.Text('Your image has been classified as: ' + str(res.argmax()))], 
         [sg.Text(f'Classification Prediction: {labels[res.argmax()]}')], 
-        [sg.Text(f'\nClassification Probabilities:')], 
-        [sg.Text(f'akiec: {res[0][0].item():.2f}')],
-        [sg.Text(f'bcc: {res[0][1].item():.2f}')],
-        [sg.Text(f'bkl: {res[0][2].item():.2f}')],
-        [sg.Text(f'df: {res[0][3].item():.2f}')],
-        [sg.Text(f'mel: {res[0][4].item():.2f}')],
-        [sg.Text(f'nv: {res[0][5].item():.2f}')],
-        [sg.Text(f'vasc: {res[0][6].item():.2f}')],
         [sg.Push(), sg.Button('OK')], 
     ] 
     sg.Window('Image Classification', layout, modal=True).read(close=True) 
