@@ -53,7 +53,7 @@ def onboarding():
     sg.Window('ECS 171 Group Project', layout, modal=True).read(close=True) 
 
 def eval_popup(res): 
-    labels = ["akiec", "bcc", "bkl", "df", "mel", "nv", "vasc"] 
+    labels = ["akiec (Actinic Keratoses and Bowen’s Disease)", "bcc (Basal Cell Carcinoma)", "bkl (Benign Keratosis-like Lesions)", "df (Dermatofibroma)", "mel (Melanoma)", "nv (Melanocytic nevi)", "vasc (Vascular Lesions)"] 
     
     layout = [ 
         # [sg.Text('Your image has been classified as: ' + str(res.argmax()))], 
