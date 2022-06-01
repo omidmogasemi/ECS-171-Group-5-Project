@@ -27,7 +27,9 @@ def upload_file():
         if file.filename == '':
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            print(eval(Image.open(file))) # TODO -> Capture the output and display it nicely 
+            # TODO -> Capture the output and display it nicely for the redirect on line 34. 
+            # TODO -> Also display the classification. You will need to call .argmax() on the out variable in the eval function. 
+            print(eval(Image.open(file))) 
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # return redirect(url_for('download_file', name=filename))
