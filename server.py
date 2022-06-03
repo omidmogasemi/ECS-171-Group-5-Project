@@ -1,8 +1,10 @@
-import os
-from flask import Flask, request, redirect, url_for, send_from_directory  
-from werkzeug.utils import secure_filename
-from PIL import Image
+import os 
+from flask import Flask, request, redirect, url_for, send_from_directory 
+from werkzeug.utils import secure_filename 
+from PIL import Image 
 import torch 
+import torch.nn as nn 
+import torchvision.models as models 
 from torchvision import transforms 
 
 UPLOAD_FOLDER = './uploaded_images' 
@@ -10,6 +12,18 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Create model with pre-trained weights for classification 
+resnet18 = models.resnet18(pretrained=True) # don't have to pre-train
+num_ftrs = resnet18.fc.in_features
+
+resnet18.fc = nn.Sequential(
+    nn.Linear(num_ftrs, 250),
+    nn.Linear(250, 7)
+)
+resnet18.load_state_dict(torch.load('./balanced_0.pth', map_location='cpu')) 
+
+resnet18.eval() 
 
 # Helper function from Flask documentation to determine if an uploaded filename 
 # is an ALLOWED_EXTENSIONS file type 
@@ -72,8 +86,6 @@ def uploaded_file(filename):
 def eval(image): 
     # Load data transformer and model file using CPU only 
     data_transform = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()]) 
-    model = torch.load('resnet18_off_prod_10epoch_pretrained_aug.pth', map_location=torch.device('cpu')) 
-    model.eval() 
     image = data_transform(image).unsqueeze(0) # Transform the image 
-    out = model(image) # Run the image against the model 
+    out = resnet18(image) # Run the image against the model 
     return out 
